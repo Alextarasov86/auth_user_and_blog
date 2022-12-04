@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class Articles(models.Model):
+class Article(models.Model):
     title = models.CharField(max_length=255)
     text = models.TextField()
     date_created = models.DateTimeField(auto_now=True)
@@ -17,8 +17,8 @@ class Articles(models.Model):
         verbose_name_plural = 'Статьи'
 
 
-class Comments(models.Model):
-    article = models.ForeignKey(Articles, on_delete=models.CASCADE)
+class Comment(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
     date_created = models.DateTimeField(auto_now=True)

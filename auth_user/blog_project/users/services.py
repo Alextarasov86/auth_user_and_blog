@@ -33,6 +33,15 @@ def authenticate(username: str, password: str) -> str:
     return token.key
 
 
+def logout(user=None, token=''):
+    if not user is None:
+        token = Token.objects.get(user=user)
+    if token != '':
+        token = Token.objects.get(key=token)
+
+    token.delete()
+
+
 def get_user_by_token(token: str) -> str:
     try:
         t = Token.objects.get(key=token)
@@ -45,10 +54,10 @@ def get_user_by_token(token: str) -> str:
 # Возвращает оставшееся время жизни токена
 def expires_in(token):
     t = Token.objects.get(key=token)
-    time_elapsed = timezone.now() - t.created
-    left_time = timedelta(seconds=settings.TOKEN_EXPIRED_AFTER_SECOND) -  time_elapsed
+    time_elapsed = timezone.now().timestamp() - t.created.timestamp()
+    left_time = settings.TOKEN_EXPIRED_AFTER_SECOND - time_elapsed
     return left_time
 
 # Проверяем закончилось ли время токена или нет
 def is_token_expired(token):
-    return expires_in(token) < timedelta(seconds=0)
+    return expires_in(token) < 0
