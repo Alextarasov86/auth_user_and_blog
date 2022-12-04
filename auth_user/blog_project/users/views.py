@@ -8,6 +8,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from .services import authenticate
 
+
 class AuthView(APIView):
     authentication_classes = ()
     permission_classes = ()
@@ -26,7 +27,7 @@ class AuthView(APIView):
         })
 
 
-class VarifyView(APIView):
+class VerifyView(APIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated, )
 

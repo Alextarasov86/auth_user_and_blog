@@ -1,7 +1,8 @@
 from rest_framework import exceptions
-
-from .services import get_user_by_token, is_token_expired
+from django.contrib.auth.models import AnonymousUser
+from .services import get_user_by_token, is_token_expired, logout
 from .models import *
+
 
 
 class GetUserCompanyMiddleware:
@@ -21,6 +22,7 @@ class GetUserCompanyMiddleware:
 
         return response
 
+
 class CheckTokenMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
@@ -29,7 +31,8 @@ class CheckTokenMiddleware:
         if 'Authorization' in request.headers.keys():
             token = request.headers['Authorization'].split(' ')[1]
             if is_token_expired(token):
-                raise exceptions.AuthenticationFailed('Token has expired')
+                logout(token=token)
+                request.user = AnonymousUser()
 
         response = self.get_response(request)
 
